@@ -40,7 +40,7 @@
               :class="{
                 '!bg-green-500': players.find(({ id }) => id === game.player_one_id),
               }"
-              class="transition-colors absolute bottom-0 right-0 w-6 h-6 bg-red-500 text-white text-sm flex items-center justify-center rounded-full border-2 border-blue-900"
+              class="transition-colors absolute bottom-0 right-0 w-6 h-6 bg-gray-200 text-white text-sm flex items-center justify-center rounded-full border-2 border-blue-900"
             ></div>
           </div>
           <!-- Player Name -->
@@ -128,7 +128,7 @@
               :class="{
                 '!bg-green-500': players.find(({ id }) => id === game.player_two_id),
               }"
-              class="transition-colors absolute bottom-0 right-0 w-6 h-6 bg-red-500 text-white text-sm flex items-center justify-center rounded-full border-2 border-blue-900"
+              class="transition-colors absolute bottom-0 right-0 w-6 h-6 bg-gray-200 text-white text-sm flex items-center justify-center rounded-full border-2 border-blue-900"
             ></div>
           </div>
           <!-- Player Name -->
@@ -158,6 +158,7 @@
         </div>
       </div>
 
+
       <menu class="max-w-md mx-auto mt-4">
         <div class="grid grid-cols-3 p-3 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
           <li
@@ -183,6 +184,8 @@
             ></span>
           </li>
         </div>
+    <p class="mt-2 text-lg text-center dark:text-gray-200">It is currently '<span class="text-blue-600 dark:text-blue-500 font-bold text-2xl">{{ currentPlayerId === props.game.player_one_id ? 'X' : 'O' }}</span>' turn.</p>
+
       </menu>
       <click-to-chat v-if="game.player_two_id" :game="game" :auth="auth"></click-to-chat>
     </div>
@@ -218,6 +221,7 @@ const getAvatarUrl = (name) => {
 const yourTurn = computed(() => {
   return currentPlayerId.value === props.auth.user.id;
 });
+
 
 const lines = [
   // rows
@@ -268,27 +272,49 @@ const updateOpponent = () => {
 };
 
 watch(gameState.hasEnded, (hasEnded) => {
-  if (hasEnded) {
+    if (!hasEnded) return;
+
+    const currentGameState = gameState.current();
+    const isPlayerOne = props.game.player_one_id === props.auth.user.id;
+
+    let resultText = "It's a Stalemate!";
+    let imageUrl = "/img/draw.gif"; // Optional fallback for stalemate
+
+    if (currentGameState === gameStates.XWins) {
+        if (isPlayerOne) {
+            resultText = "🎉 Congratulations! You win the game! 🥳";
+            imageUrl = "/img/win.gif";
+        } else {
+            resultText = "Better luck next time! You lost this round.🥺";
+            imageUrl = "/img/lost.png";
+        }
+    } else if (currentGameState === gameStates.OWins) {
+        if (isPlayerOne) {
+            resultText = "Better luck next time! You lost this round.🥺";
+            imageUrl = "/img/lost.png";
+        } else {
+            resultText = "🎉 Congratulations! You win the game! 🥳";
+            imageUrl = "/img/win.gif";
+        }
+    }
+
     Swal.fire({
-      title: "Game Over",
-      text:
-        gameState.current() === gameStates.XWins
-          ? "Player X Wins!"
-          : gameState.current() === gameStates.OWins
-          ? "Player O Wins!"
-          : "It's a Stalemate!",
-      icon: "info",
-      confirmButtonText: "Restart Game",
-      showCancelButton: true,
-      allowEscapeKey: false,
-      allowOutsideClick: false,
+        title: "Game Over",
+        text: resultText,
+        imageUrl : imageUrl, // Dynamically set based on win/lose
+        // icon: "info",
+        confirmButtonText: "Restart Game",
+        showCancelButton: true,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
     }).then((result) => {
-      if (result.isConfirmed) {
-        resetGame();
-      }
+        if (result.isConfirmed) {
+            resetGame();
+        }
     });
-  }
 });
+
+
 
 const channel = Echo.join(`game.${props.game.id}`)
   .here((users) => {

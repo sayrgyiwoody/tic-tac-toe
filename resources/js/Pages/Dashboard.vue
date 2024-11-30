@@ -15,7 +15,7 @@
             :href="route('games.store')"
             method="POST"
             as="button"
-            class="flex items-center justify-center cursor-pointer gap-2 rounded-md border border-transparent bg-gray-700 hover:bg-gray-800 px-4 py-3 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out focus:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 active:bg-gray-900"
+            class="flex items-center justify-center cursor-pointer gap-2 rounded-md border border-transparent bg-gray-700 hover:bg-gray-600 px-4 py-3 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out focus:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 active:bg-gray-900"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@
 
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <div
-            class="p-4 bg-white border rounded-lg shadow hover:shadow-lg dark:bg-gray-700"
+            class="p-4 bg-white border dark:border-2 dark:border-gray-500 rounded-lg shadow hover:shadow-lg dark:bg-gray-800"
             v-for="game in games"
             :key="game.id"
           >

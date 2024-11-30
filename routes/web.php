@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('games', GameController::class)
-    ->only(['index', 'show', 'update']);
+    ->only(['index', 'show', 'update' , 'destroy']);
 
     Route::post('games', [GameController::class, 'store'])
     ->middleware('throttle:5,1')->name('games.store'); // Allow 5 requests per minute

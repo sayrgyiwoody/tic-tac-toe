@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-8 right-8">
+  <div class="fixed bottom-12 right-8 md:right-12">
     <transition name="fade">
       <div v-if="isOpen" class="mb-4">
         <div
@@ -49,11 +49,11 @@
     </transition>
     <button
       @click="toggleChat"
-      class="w-12 h-12 text-white bg-blue-500 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
+      class=" w-12 h-12 md:w-16 md:h-16 text-white bg-blue-500 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
       :aria-label="isOpen ? 'Close chat' : 'Open chat'"
     >
-      <MessageCircleIcon v-if="!isOpen" size="24" />
-      <XIcon v-else size="24" />
+      <MessageCircleIcon v-if="!isOpen"  />
+      <XIcon v-else  />
     </button>
 
 
