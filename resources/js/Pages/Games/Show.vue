@@ -1,23 +1,19 @@
 <template>
   <AuthenticatedLayout>
     <div class="flex items-center justify-between py-4 px-6">
-        <Link :href="route('games.index')" class="flex items-center text-white">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="w-6 h-6 mr-2"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15 19l-7-7 7-7"
-                />
-            </svg>
-            Back
-        </Link>
+      <Link :href="route('games.index')" class="flex items-center text-white">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-6 h-6 mr-2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </Link>
     </div>
     <div class="p-3">
       <div
@@ -28,10 +24,10 @@
           <!-- Profile Picture with Border -->
           <div class="relative">
             <img
-             :src="getAvatarUrl(game.player_one.name)"
+              :src="getAvatarUrl(game.player_one.name)"
               alt="player name"
-              :class="{'border-4 border-green-500': xTurn}"
-              class="w-20 h-20 rounded-full "
+              :class="{ 'border-4 border-green-500': xTurn }"
+              class="w-20 h-20 rounded-full"
             />
             <!-- Active Status Indicator -->
             <div
@@ -56,7 +52,8 @@
           </p>
         </div> -->
         <!-- Turn Arrow -->
-        <div v-if="yourTurn && game.player_two_id"
+        <div
+          v-if="yourTurn && game.player_two_id"
           class="flex flex-col items-center text-white"
         >
           <p class="text-sm md:text-base text-center w-32 md:w-40">It's Your Turn !</p>
@@ -80,7 +77,20 @@
         </div>
 
         <div v-else-if="!yourTurn" class="flex flex-col items-center text-white">
-          <svg class=" animate-bounce" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M15 3.25a.75.75 0 0 1 .75.75v1A1.75 1.75 0 0 1 14 6.75h-1a.25.25 0 0 0-.25.25v1h.422c2.54 0 3.809 0 4.785.614q.371.233.683.542c.82.81 1.11 2.047 1.687 4.52l1.023 4.373A2.858 2.858 0 0 1 16 19.957l-.12-.246a3.2 3.2 0 0 0-2.877-1.794h-2.005a3.2 3.2 0 0 0-2.876 1.794l-.12.246a2.858 2.858 0 0 1-5.35-1.908l1.022-4.374c.578-2.472.867-3.708 1.686-4.519a4 4 0 0 1 .684-.542C7.02 8 8.29 8 10.83 8h.422V7c0-.966.783-1.75 1.75-1.75h1a.25.25 0 0 0 .25-.25V4a.75.75 0 0 1 .75-.75M16 12a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-7.5-.75a.75.75 0 0 1 .75.75v.75H10a.75.75 0 0 1 0 1.5h-.75V15a.75.75 0 0 1-1.5 0v-.75H7a.75.75 0 0 1 0-1.5h.75V12a.75.75 0 0 1 .75-.75M17 15.5a1 1 0 1 0 0-2a1 1 0 0 0 0 2" clip-rule="evenodd"/></svg>
+          <svg
+            class="animate-bounce"
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              fill-rule="evenodd"
+              d="M15 3.25a.75.75 0 0 1 .75.75v1A1.75 1.75 0 0 1 14 6.75h-1a.25.25 0 0 0-.25.25v1h.422c2.54 0 3.809 0 4.785.614q.371.233.683.542c.82.81 1.11 2.047 1.687 4.52l1.023 4.373A2.858 2.858 0 0 1 16 19.957l-.12-.246a3.2 3.2 0 0 0-2.877-1.794h-2.005a3.2 3.2 0 0 0-2.876 1.794l-.12.246a2.858 2.858 0 0 1-5.35-1.908l1.022-4.374c.578-2.472.867-3.708 1.686-4.519a4 4 0 0 1 .684-.542C7.02 8 8.29 8 10.83 8h.422V7c0-.966.783-1.75 1.75-1.75h1a.25.25 0 0 0 .25-.25V4a.75.75 0 0 1 .75-.75M16 12a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-7.5-.75a.75.75 0 0 1 .75.75v.75H10a.75.75 0 0 1 0 1.5h-.75V15a.75.75 0 0 1-1.5 0v-.75H7a.75.75 0 0 1 0-1.5h.75V12a.75.75 0 0 1 .75-.75M17 15.5a1 1 0 1 0 0-2a1 1 0 0 0 0 2"
+              clip-rule="evenodd"
+            />
+          </svg>
           <p class="text-sm md:text-base text-center w-32 md:w-40 mt-2 animate-pulse">
             Wait for other player ...
           </p>
@@ -99,9 +109,9 @@
           <!-- Profile Picture with Border -->
           <div class="relative">
             <img
-            :src="getAvatarUrl(game.player_two.name)"
+              :src="getAvatarUrl(game.player_two.name)"
               alt="player name"
-              :class="{'border-4 border-green-500': !xTurn}"
+              :class="{ 'border-4 border-green-500': !xTurn }"
               class="w-20 h-20 rounded-full"
             />
             <!-- Active Status Indicator -->
@@ -165,6 +175,7 @@
           </li>
         </div>
       </menu>
+      <click-to-chat v-if="game.player_two_id" :game="game" :auth="auth"></click-to-chat>
     </div>
   </AuthenticatedLayout>
 </template>
@@ -173,9 +184,9 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { ref, computed, defineProps, onUnmounted, onMounted, watch } from "vue";
 import { Link, router } from "@inertiajs/vue3";
-
 import Swal from "sweetalert2";
 import { useGameState, gameStates } from "@/Composables/useGameState";
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(["game", "auth"]);
 
@@ -190,8 +201,8 @@ const xTurn = computed(
 );
 
 const getAvatarUrl = (name) => {
-//   return `https://ui-avatars.com/api/?background=2563eb&color=ffffff&name=${encodeURIComponent(name)}`;
-return '/img/person.png';
+  //   return `https://ui-avatars.com/api/?background=2563eb&color=ffffff&name=${encodeURIComponent(name)}`;
+  return "/img/person.png";
 };
 
 const yourTurn = computed(() => {
@@ -260,32 +271,37 @@ watch(gameState.hasEnded, (hasEnded) => {
           : "It's a Stalemate!",
       icon: "info",
       confirmButtonText: "Restart Game",
+      showCancelButton: true,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
     }).then((result) => {
-      result.isConfirmed && resetGame();
+        if(result.isConfirmed) {
+          resetGame();
+        }
     });
   }
 });
 
 const channel = Echo.join(`game.${props.game.id}`)
-  .here((users) => {
-    players.value = users;
-  })
-  .joining((user) => {
-    router.reload({
-      onSuccess: () => {
-        players.value.push(user);
-      },
-    });
-  })
-  .leaving((user) => (players.value = players.value.filter((u) => u.id !== user.id)))
-  .listenForWhisper("PlayerMadeMove", ({ state }) => {
-    boardState.value = state;
-    checkForVictory();
+    .here((users) => {
+        players.value = users;
+    })
+    .joining((user) => {
+        router.reload({
+            onSuccess: () => {
+                players.value.push(user);
+            },
+        });
+    })
+    .leaving((user) => (players.value = players.value.filter((u) => u.id !== user.id)))
+    .listenForWhisper("PlayerMadeMove", ({ state }) => {
+        boardState.value = state;
+        checkForVictory();
 
-    if (gameState.current() === gameStates.InProgress) {
-      Swal.close();
-    }
-  });
+        if (gameState.current() === gameStates.InProgress) {
+            Swal.close();
+        }
+    });
 
 const fillSquare = (index) => {
   if (!yourTurn.value) {
@@ -316,10 +332,12 @@ onUnmounted(() => {
 
 <script>
 import Loader from "@/Components/Loader.vue";
+import ClickToChat from "@/Components/Game/ClickToChat.vue";
 
 export default {
   components: {
-    Loader,
+        Loader,
+        ClickToChat,
   },
 };
 </script>
