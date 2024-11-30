@@ -31,7 +31,7 @@
               alt="player name"
               :class="{
                 'border-4 border-green-500':
-                  props.game.current_player_id === game.player_one_id,
+                  currentPlayerId === props.game.player_one_id,
               }"
               class="w-20 h-20 rounded-full"
             />
@@ -119,7 +119,7 @@
               alt="player name"
               :class="{
                 'border-4 border-green-500':
-                  props.game.current_player_id === game.player_two_id,
+                  currentPlayerId === props.game.player_two_id,
               }"
               class="w-20 h-20 rounded-full"
             />
