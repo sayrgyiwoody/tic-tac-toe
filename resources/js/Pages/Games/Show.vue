@@ -98,7 +98,7 @@
             />
           </svg>
           <p class="text-sm md:text-base text-center w-32 md:w-40 mt-2 animate-pulse">
-            Wait for other player ...
+            Your Opponent's Turn
           </p>
         </div>
 
@@ -195,7 +195,7 @@ import { ref, computed, defineProps, onUnmounted, onMounted, watch } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { useGameState, gameStates } from "@/Composables/useGameState";
-import { Inertia } from "@inertiajs/inertia";
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(["game", "auth"]);
 
@@ -294,7 +294,8 @@ const channel = Echo.join(`game.${props.game.id}`)
   .here((users) => {
     players.value = users;
   })
-  .joining((user) => {
+    .joining((user) => {
+    Swal.close();
     router.reload({
       onSuccess: () => {
         players.value.push(user);
@@ -308,12 +309,12 @@ const channel = Echo.join(`game.${props.game.id}`)
       text: "Your opponent has left the game. Would you like to wait, or leave?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Wait",
-      cancelButtonText: "Leave",
+      confirmButtonText: "Leave",
+      cancelButtonText: "Wait",
       allowEscapeKey: false,
       allowOutsideClick: false,
     }).then((result) => {
-      if (result.isDismissed) {
+      if (result.isConfirmed) {
         Inertia.visit(route("games.index"));
       }
     });

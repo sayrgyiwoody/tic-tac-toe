@@ -40,8 +40,8 @@ const showingNavigationDropdown = ref(false);
               </div>
             </div>
 
-            <div class="hidden sm:ms-6 sm:flex sm:items-center">
-              <!-- theme toggler start  -->
+            <div class="flex items-center gap-2">
+                <!-- theme toggler start  -->
               <button
                 @click="toggleDarkMode"
                 class="theme-toggle cursor-pointer rounded-full w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-600 dark:border-none border border-3 duration-150 hover:bg-slate-200 border-slate-300 text-gray-800 dark:text-gray-200 "
@@ -71,6 +71,9 @@ const showingNavigationDropdown = ref(false);
                 </svg>
               </button>
               <!-- theme toggler end  -->
+
+            <div class="hidden sm:ms-6 sm:flex sm:items-center">
+
               <!-- Settings Dropdown -->
               <div class="relative ms-3">
                 <Dropdown align="right" width="48">
@@ -108,8 +111,11 @@ const showingNavigationDropdown = ref(false);
               </div>
             </div>
 
+
+
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
+
               <button
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-500 dark:hover:text-gray-300 focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-500 dark:focus:text-gray-300 focus:outline-none"
@@ -142,6 +148,7 @@ const showingNavigationDropdown = ref(false);
                   />
                 </svg>
               </button>
+            </div>
             </div>
           </div>
         </div>
