@@ -1,5 +1,5 @@
-# 🌟 Introducing Our Real-Time Multiplayer Tic Tac Toe Game! 🎮🗨️  
-
+# 🌟 Introducing My Real-Time Multiplayer Tic Tac Toe Game! 🎮🗨️  
+![Project Demo](./public/img/demo.png)
 🔥 **What’s New?**  
 Get ready to experience the classic Tic Tac Toe like never before! Our game brings the fun and challenge of this timeless strategy game into the modern world with **real-time multiplayer functionality** and **in-game chat** for an interactive and engaging experience.  
 
