@@ -1,7 +1,10 @@
 <template>
   <AuthenticatedLayout>
     <div class="flex items-center justify-between py-4 px-6">
-      <Link :href="route('games.index')" class="flex items-center text-gray-800 dark:text-white">
+      <Link
+        :href="route('games.index')"
+        class="flex items-center text-gray-800 dark:text-white"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -26,7 +29,10 @@
             <img
               :src="getAvatarUrl(game.player_one.name)"
               alt="player name"
-              :class="{ 'border-4 border-green-500': xTurn }"
+              :class="{
+                'border-4 border-green-500':
+                  props.game.current_player_id === game.player_one_id,
+              }"
               class="w-20 h-20 rounded-full"
             />
             <!-- Active Status Indicator -->
@@ -111,7 +117,10 @@
             <img
               :src="getAvatarUrl(game.player_two.name)"
               alt="player name"
-              :class="{ 'border-4 border-green-500': !xTurn }"
+              :class="{
+                'border-4 border-green-500':
+                  props.game.current_player_id === game.player_two_id,
+              }"
               class="w-20 h-20 rounded-full"
             />
             <!-- Active Status Indicator -->
@@ -186,9 +195,12 @@ import { ref, computed, defineProps, onUnmounted, onMounted, watch } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { useGameState, gameStates } from "@/Composables/useGameState";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps(["game", "auth"]);
+
+const currentPlayerId = ref(props.game.current_player_id);
+const startingPlayerId = ref(props.game.starting_player_id);
 
 const boardState = ref(props.game.state || [0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
@@ -196,9 +208,7 @@ const gameState = useGameState();
 
 const players = ref([]);
 
-const xTurn = computed(
-  () => boardState.value.reduce((carry, value) => carry + value, 0) === 0
-);
+const xTurn = computed(() => props.game.player_one_id === props.auth.user.id);
 
 const getAvatarUrl = (name) => {
   //   return `https://ui-avatars.com/api/?background=2563eb&color=ffffff&name=${encodeURIComponent(name)}`;
@@ -206,10 +216,7 @@ const getAvatarUrl = (name) => {
 };
 
 const yourTurn = computed(() => {
-  if (props.game.player_one_id === props.auth?.user.id) {
-    return xTurn.value;
-  }
-  return !xTurn.value;
+  return currentPlayerId.value === props.auth.user.id;
 });
 
 const lines = [
@@ -256,6 +263,7 @@ const updateOpponent = () => {
 
   channel.whisper("PlayerMadeMove", {
     state: boardState.value,
+    current_player_id: currentPlayerId.value,
   });
 };
 
@@ -275,33 +283,56 @@ watch(gameState.hasEnded, (hasEnded) => {
       allowEscapeKey: false,
       allowOutsideClick: false,
     }).then((result) => {
-        if(result.isConfirmed) {
-          resetGame();
-        }
+      if (result.isConfirmed) {
+        resetGame();
+      }
     });
   }
 });
 
 const channel = Echo.join(`game.${props.game.id}`)
-    .here((users) => {
-        players.value = users;
-    })
-    .joining((user) => {
-        router.reload({
-            onSuccess: () => {
-                players.value.push(user);
-            },
-        });
-    })
-    .leaving((user) => (players.value = players.value.filter((u) => u.id !== user.id)))
-    .listenForWhisper("PlayerMadeMove", ({ state }) => {
-        boardState.value = state;
-        checkForVictory();
-
-        if (gameState.current() === gameStates.InProgress) {
-            Swal.close();
-        }
+  .here((users) => {
+    players.value = users;
+  })
+  .joining((user) => {
+    router.reload({
+      onSuccess: () => {
+        players.value.push(user);
+      },
     });
+  })
+  .leaving((user) => {
+    players.value = players.value.filter((u) => u.id !== user.id);
+    Swal.fire({
+      title: "Opponent Left",
+      text: "Your opponent has left the game. Would you like to wait, or leave?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Wait",
+      cancelButtonText: "Leave",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+    }).then((result) => {
+      if (result.isDismissed) {
+        Inertia.visit(route("games.index"));
+      }
+    });
+  })
+  .listenForWhisper("PlayerMadeMove", (event) => {
+    boardState.value = event.state;
+    currentPlayerId.value = event.current_player_id;
+    checkForVictory();
+
+    if (gameState.current() === gameStates.InProgress) {
+      Swal.close();
+    }
+  })
+  .listenForWhisper("ResetGame", (event) => {
+    boardState.value = event.state;
+    startingPlayerId.value = event.starting_player_id;
+    currentPlayerId.value = event.current_player_id;
+    Swal.close();
+  });
 
 const fillSquare = (index) => {
   if (!yourTurn.value) {
@@ -309,6 +340,11 @@ const fillSquare = (index) => {
   }
 
   boardState.value[index] = xTurn.value ? -1 : 1;
+
+  currentPlayerId.value =
+    currentPlayerId.value === props.game.player_one_id
+      ? props.game.player_two_id
+      : props.game.player_one_id;
 
   updateOpponent();
   checkForVictory();
@@ -318,7 +354,20 @@ const resetGame = () => {
   boardState.value = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   gameState.change(gameStates.InProgress);
 
-  updateOpponent();
+  router.post(route("games.reset", props.game.id), {
+    state: boardState.value,
+  });
+
+  const nextPlayerId =
+    startingPlayerId.value === props.game.player_one_id
+      ? props.game.player_two_id
+      : props.game.player_one_id;
+
+  channel.whisper("ResetGame", {
+    state: boardState.value,
+    starting_player_id: nextPlayerId,
+    current_player_id: nextPlayerId,
+  });
 };
 
 onMounted(() => {
@@ -336,8 +385,8 @@ import ClickToChat from "@/Components/Game/ClickToChat.vue";
 
 export default {
   components: {
-        Loader,
-        ClickToChat,
+    Loader,
+    ClickToChat,
   },
 };
 </script>

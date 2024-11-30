@@ -15,6 +15,8 @@ class Game extends Model
         'player_one_id',
         'player_two_id',
         'state',
+        'current_player_id',
+        'starting_player_id',
     ];
 
     protected function casts() : array
@@ -32,5 +34,23 @@ class Game extends Model
     public function playerTwo() : BelongsTo
     {
         return $this->belongsTo(User::class, 'player_two_id');
+    }
+
+    public function players() : array
+    {
+        return [
+            $this->playerOne,
+            $this->playerTwo
+        ];
+    }
+
+    public function currentPlayer() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'current_player_id');
+    }
+
+    public function startingPlayer() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'starting_player_id');
     }
 }
