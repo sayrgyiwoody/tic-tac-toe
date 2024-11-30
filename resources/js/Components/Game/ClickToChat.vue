@@ -3,7 +3,7 @@
     <transition name="fade">
       <div v-if="isOpen" class="mb-4">
         <div
-          class="w-80 h-96 bg-white rounded-lg shadow-xl flex flex-col overflow-hidden custom-scrollbar"
+          class="w-80 h-96 bg-white rounded-lg shadow-xl flex flex-col overflow-hidden"
         >
           <div class="flex items-center justify-between p-4 bg-gray-100">
             <h3 class="text-lg font-semibold">Chat with {{ opponentName }}</h3>
@@ -60,25 +60,6 @@
   </div>
 </template>
 
-<style>
-.custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-</style>
 
 <script setup>
 import { computed, ref } from "vue";

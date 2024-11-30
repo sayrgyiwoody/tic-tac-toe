@@ -60,13 +60,13 @@
 
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <div
-            class="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800"
+            class="p-4 bg-white border rounded-lg shadow hover:shadow-lg dark:bg-gray-700"
             v-for="game in games"
             :key="game.id"
           >
             <div class="flex justify-between items-center mb-4">
               <div class="flex gap-2 dark:text-gray-50">
-                <p>{{ game.player_one.name }}</p>
+                <p class=" font-semibold">{{ game.player_one.name }}</p>
                 |
                 <p>{{ formatDate(game.created_at) }}</p>
               </div>

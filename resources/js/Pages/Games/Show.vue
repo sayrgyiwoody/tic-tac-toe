@@ -1,7 +1,7 @@
 <template>
   <AuthenticatedLayout>
     <div class="flex items-center justify-between py-4 px-6">
-      <Link :href="route('games.index')" class="flex items-center text-white">
+      <Link :href="route('games.index')" class="flex items-center text-gray-800 dark:text-white">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
