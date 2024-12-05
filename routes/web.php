@@ -44,6 +44,9 @@ Route::group(['prefix'=>'telegram'], function(){
     Route::get('message-form', [TelegramController::class, 'messageForm'])->name('telegram.message-form');
     Route::post('/send-message', [TelegramController::class, 'sendMessage'])->name('telegram.send-message');
     Route::get('/get-updates', [TelegramController::class, 'getUpdates'])->name('telegram.get-updates');
+
+
 });
+
 
 require __DIR__.'/auth.php';
