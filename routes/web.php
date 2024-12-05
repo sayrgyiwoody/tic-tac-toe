@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TelegramController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -37,6 +38,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/games/{game}/join', [GameController::class, 'join'])->name('games.join');
 
     Route::post('/games/{game}/reset', [GameController::class, 'reset'])->name('games.reset');
+});
+
+Route::group(['prefix'=>'telegram'], function(){
+    Route::get('message-form', [TelegramController::class, 'messageForm'])->name('telegram.message-form');
+    Route::post('/send-message', [TelegramController::class, 'sendMessage'])->name('telegram.send-message');
+    Route::get('/get-updates', [TelegramController::class, 'getUpdates'])->name('telegram.get-updates');
 });
 
 require __DIR__.'/auth.php';
