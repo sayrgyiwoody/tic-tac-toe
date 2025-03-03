@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Game;
 use App\Events\GameJoined;
 use App\Events\GameCreated;
+use App\Events\GameUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -57,7 +58,12 @@ class GameController extends Controller
             $existingGame->delete();
         }
 
-        $game = Game::create(['player_one_id' => $request->user()->id]);
+        $game = Game::create([
+            'player_one_id' => $request->user()->id,
+            'starting_player_id' => $request->user()->id,
+            'current_player_id' => $request->user()->id
+        ]);
+
         $game->load('playerOne','playerTwo');
 
         GameCreated::dispatch($game);
@@ -82,7 +88,7 @@ class GameController extends Controller
     {
         Gate::authorize('join', $game);
 
-        $game->update(['player_two_id' => $request->user()->id]);
+        $game->update(['player_two_id' => $request->user()->id,'status' => 'started']);
         GameJoined::dispatch($game);
 
         return to_route('games.show', $game);
@@ -108,16 +114,44 @@ class GameController extends Controller
             'state.*' => ['integer', 'between:-1,1']
         ]);
 
+        if ($request->user()->id !== $game->current_player_id) {
+            return back()->withErrors(['error' => 'It is not your turn to play.']);
+        }
+
+        $data['current_player_id'] = $game->player_one_id === $game->current_player_id ?
+            $game->player_two_id :
+            $game->player_one_id;
+
         $game->update($data);
+
+        return to_route('games.show', $game);
+    }
+
+    public function reset(Request $request , Game $game) {
+        Gate::authorize('update', $game);
+
+        $nextPlayer = $game->player_one_id === $game->starting_player_id ?
+        $game->player_two_id :
+        $game->player_one_id;
+
+        $game->update([
+            'state' => null,
+            'current_player_id' => $nextPlayer,
+            'starting_player_id' => $nextPlayer,
+            'status' => 'started',
+        ]);
+
+        // GameUpdated::dispatch($game);
 
 
         return to_route('games.show', $game);
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Game $game)
     {
         //
     }

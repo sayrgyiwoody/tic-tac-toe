@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('player_one_id')->constrained()->references('id')->on('users')->cascadeOnDelete();
             $table->foreignId('player_two_id')->nullable()->constrained()->references('id')->on('users')->cascadeOnDelete();
             $table->string('state')->nullable();
+            $table->foreignId('current_player_id')->nullable()->constrained()->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('starting_player_id')->nullable()->constrained()->references('id')->on('users')->cascadeOnDelete();
+            $table->enum('status', ['pending', 'started'])->default('pending');
             $table->timestamps();
         });
     }

@@ -29,12 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('games', GameController::class)
-    ->only(['index', 'show', 'update']);
+    ->only(['index', 'show', 'update' , 'destroy']);
 
     Route::post('games', [GameController::class, 'store'])
     ->middleware('throttle:5,1')->name('games.store'); // Allow 5 requests per minute
 
     Route::post('/games/{game}/join', [GameController::class, 'join'])->name('games.join');
+
+    Route::post('/games/{game}/reset', [GameController::class, 'reset'])->name('games.reset');
 });
 
 require __DIR__.'/auth.php';
